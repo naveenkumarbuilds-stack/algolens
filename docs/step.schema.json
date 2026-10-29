@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://algolens.local/schemas/step.json",
+  "title": "AlgoLens Step v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "index",
+    "type",
+    "line",
+    "variables",
+    "highlights",
+    "explanation",
+    "view"
+  ],
+  "properties": {
+    "version": { "const": 1 },
+    "index": { "type": "integer", "minimum": 0 },
+    "type": {
+      "enum": [
+        "initial",
+        "compare",
+        "swap",
+        "write",
+        "visit",
+        "enqueue",
+        "dequeue",
+        "push",
+        "pop",
+        "relax",
+        "return",
+        "complete",
+        "snapshot"
+      ]
+    },
+    "line": { "type": ["integer", "null"], "minimum": 1 },
+    "variables": { "type": "object", "additionalProperties": { "$ref": "#/$defs/value" } },
+    "highlights": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["target", "ids", "role"],
+        "properties": {
+          "target": { "enum": ["array", "node", "edge", "cell"] },
+          "ids": { "type": "array", "items": { "type": "string" } },
+          "role": { "enum": ["active", "compare", "changed", "visited", "final"] }
+        }
+      }
+    },
+    "explanation": { "type": "string", "minLength": 1 },
+    "view": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "values"],
+          "properties": {
+            "kind": { "enum": ["array", "stack", "queue"] },
+            "values": { "type": "array", "items": { "type": "number" } }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "nodes", "edges"],
+          "properties": {
+            "kind": { "enum": ["graph", "tree"] },
+            "nodes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["id", "label"],
+                "properties": { "id": { "type": "string" }, "label": { "type": "string" } }
+              }
+            },
+            "edges": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["id", "from", "to", "directed"],
+                "properties": {
+                  "id": { "type": "string" },
+                  "from": { "type": "string" },
+                  "to": { "type": "string" },
+                  "directed": { "type": "boolean" },
+                  "weight": { "type": "number" }
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "cells", "rowLabels", "columnLabels"],
+          "properties": {
+            "kind": { "const": "dp" },
+            "cells": {
+              "type": "array",
+              "items": { "type": "array", "items": { "type": ["number", "string", "null"] } }
+            },
+            "rowLabels": { "type": "array", "items": { "type": "string" } },
+            "columnLabels": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind"],
+          "properties": { "kind": { "const": "code" } }
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "value": {
+      "anyOf": [
+        { "type": ["string", "number", "boolean", "null"] },
+        { "type": "array", "items": { "$ref": "#/$defs/value" } },
+        { "type": "object", "additionalProperties": { "$ref": "#/$defs/value" } }
+      ]
+    }
+  }
+}

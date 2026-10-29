@@ -1,0 +1,31 @@
+{
+  "name": "algolens",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "engines": {
+    "node": ">=22.12.0 <25"
+  },
+  "scripts": {
+    "format:check": "prettier --check .",
+    "format": "prettier --write .",
+    "dev:server": "npm run dev -w server",
+    "test": "npm test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present && npm run lint:infra",
+    "dev:client": "npm run dev -w client",
+    "build": "npm run build -w client",
+    "db:sync-schema": "node scripts/sync-postgres-schema.js",
+    "db:check-schema": "node scripts/sync-postgres-schema.js --check",
+    "lint:infra": "eslint api scripts --config server/eslint.config.js"
+  },
+  "devDependencies": {
+    "prettier": "3.6.2"
+  },
+  "overrides": {
+    "deepmerge-ts": "8.0.2"
+  },
+  "type": "module"
+}

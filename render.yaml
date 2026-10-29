@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: algolens-api
+    runtime: node
+    plan: free
+    region: singapore
+    buildCommand: npm ci --include=dev && npm run db:generate:postgres -w server
+    startCommand: npm run db:deploy:postgres -w server && npm start -w server
+    healthCheckPath: /api/health
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: NODE_VERSION
+        value: 24.21.0
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: DIRECT_URL
+        sync: false
+      - key: CLIENT_ORIGIN
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: PROXY_SECRET
+        sync: false
+      - key: COOKIE_SECURE
+        value: 'true'
+      - key: COOKIE_SAME_SITE
+        value: lax
+      - key: TRUST_PROXY
+        value: '0'
+      - key: AI_MODEL
+        value: gpt-4.1-mini

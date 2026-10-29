@@ -22,7 +22,7 @@
     "lint:infra": "eslint api scripts --config server/eslint.config.js"
   },
   "devDependencies": {
-    "prettier": "3.6.2"
+    "prettier": "3.9.10"
   },
   "overrides": {
     "deepmerge-ts": "8.0.2"
